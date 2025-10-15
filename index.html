@@ -1,42 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Open APA Project</title>
-  <script>
-    // Parse the project ID from the URL (e.g., ?id=12345)
-    function getProjectId() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get('id');
-    }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Open FileMaker Record</title>
 
-    function openFileMaker(projectId) {
-      if (!projectId) {
-        document.getElementById('status').innerText = '❌ No Project ID provided.';
+  <script>
+    (function() {
+      // Get the URL parameter value (e.g., ?record=12345)
+      const params = new URLSearchParams(window.location.search);
+      const recordID = params.get('record');
+
+      // If no parameter is found, just show a message
+      if (!recordID) {
+        document.addEventListener('DOMContentLoaded', () => {
+          document.getElementById('status').textContent = "No record ID provided.";
+        });
         return;
       }
 
-      // Replace with your FileMaker URL pattern
-      const fmUrl = `fmp://%7B%7D/APA%20Projects?script=Open_Project&param=${projectId}`;
+      // Build your FileMaker URL — customize the script or layout as needed
+      const target = `FMP://fms.inghamdrains.org/APA?script=OpenRecord&param=${encodeURIComponent(recordID)}`;
 
-      // Try opening FileMaker
-      window.location.href = fmUrl;
+      // Try redirecting to FileMaker
+      try {
+        window.location.replace(target);
+      } catch (e) {
+        window.location.href = target;
+      }
 
-      document.getElementById('status').innerText = `🔗 Opening Project ID: ${projectId}`;
-    }
+      // Close the tab after 3 seconds
+      setTimeout(function() {
+        window.open('', '_self');
+        window.close();
+      }, 3000);
 
-    window.onload = () => {
-      const projectId = getProjectId();
-      openFileMaker(projectId);
-    };
+      // Update the fallback link on the page
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('link').href = target;
+        document.getElementById('status').textContent = `Opening record ${recordID}...`;
+      });
+    })();
   </script>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; }
-    #status { font-size: 1.2rem; margin-top: 1rem; }
-  </style>
 </head>
 <body>
-  <h1>APA Project Link</h1>
-  <div id="status">⏳ Loading...</div>
+  <p id="status">Opening FileMaker...</p>
+  <p>If nothing opens automatically, <a id="link" href="#">click here to open FileMaker</a>.</p>
 </body>
 </html>
