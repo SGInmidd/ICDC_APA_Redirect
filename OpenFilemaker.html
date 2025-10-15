@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open FileMaker Record</title>
+<script>
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectID = urlParams.get('Project_ID');  
+
+    if (projectID) {
+        const fmLink = `fmp://fms.inghamdrains.org/APA?script=Find_APA_Permit&param=${encodeURIComponent(projectID)}`;
+        try { window.location.replace(fmLink); } 
+        catch(e) { window.location.href = fmLink; }
+        setTimeout(function() { window.open('', '_self'); window.close(); }, 3000);
+    } else {
+        document.body.innerHTML = "<p>No Project_ID provided.</p>";
+    }
+})();
+</script>
+</head>
+<body>
+<p>If FileMaker does not open automatically, <a id="fmLink" href="#">click here</a>.</p>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const projectID = urlParams.get('Project_ID');
+if (projectID) {
+    const fmLink = `fmp://fms.inghamdrains.org/APA?script=Find_APA_Permit&param=${encodeURIComponent(projectID)}`;
+    document.getElementById("fmLink").href = fmLink;
+    document.getElementById("fmLink").innerText = `Open Project ${projectID} in FileMaker`;
+}
+</script>
+</body>
+</html>
