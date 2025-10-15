@@ -5,17 +5,28 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Open FileMaker</title>
 
-  <!-- Redirect immediately -->
-  <meta http-equiv="refresh" content="0; url=FMP://fms.inghamdrains.org/APA" />
-
   <script>
     (function(){
       var target = "FMP://fms.inghamdrains.org/APA";
-      try { window.location.replace(target); } catch(e) { window.location.href = target; }
+
+      // Try opening the FileMaker link
+      try {
+        window.location.replace(target);
+      } catch(e) {
+        window.location.href = target;
+      }
+
+      // Wait 3 seconds and then try to close the tab
+      setTimeout(function() {
+        // Some browsers will only allow this if the page was opened by script
+        window.open('', '_self');
+        window.close();
+      }, 3000); // 3000 ms = 3 seconds
     })();
   </script>
 </head>
 <body>
   <p>If nothing opens automatically, <a href="FMP://fms.inghamdrains.org/APA">click here to open FileMaker</a>.</p>
+  <p>This page will close automatically after a few seconds.</p>
 </body>
 </html>
